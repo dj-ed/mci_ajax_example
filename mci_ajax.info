@@ -1,0 +1,4 @@
+name = MCI AJAX
+description = An module showing example usage of Drupal AJAX
+package = Custom
+core = 7.x

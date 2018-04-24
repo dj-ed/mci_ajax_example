@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Implements hook_menu();
+ */
+function mci_ajax_menu() {
+    $items = array();
+
+    /** LINKS (Source: `mci_ajax_links.inc`)*/
+    $items['mci/ajax/link'] = array(
+        'title' => 'Ajax Link ("use-ajax" class)',
+        'page callback' => 'mci_ajax_render_link',
+        'access callback' => TRUE,
+        'file' => 'mci_ajax_links.inc'
+    );
+
+    $items['mci/ajax/link-render'] = array(
+        'title' => 'Ajax Link (Renderable Array)',
+        'page callback' => 'mci_ajax_render_array_link',
+        'access callback' => TRUE,
+        'file' => 'mci_ajax_links.inc'
+    );
+    // A menu callback is required when using ajax outside of the Form API.
+    $items['ajax_link_callback'] = array(
+        'page callback' => 'mci_ajax_response_callback',
+        'access callback' => 'user_access',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+        'file' => 'mci_ajax_links.inc',
+    );
+
+    /** FORMS (Source: `mci_ajax_forms.inc`)*/
+    $items['mci/ajax/autocomplete-title'] = array(
+        'title' => 'Autocomplete (node with nid)',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('mci_ajax_autocomplete_node_title'),
+        'access arguments' => array('access content'),
+        'file' => 'mci_ajax_forms.inc',
+        'weight' => 11,
+    );
+
+    $items['autocomplete_node_title_callback'] = array(
+        'page callback' => 'mci_ajax_autocomplete_node_title_callback',
+        'file' => 'mci_ajax_forms.inc',
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access content'),
+    );
+
+
+    // A classic multi-step wizard, but with no page reloads.
+    // See ajax_example_graceful_degradation.inc.
+    $items['mci/ajax/multistepform'] = array(
+        'title' => 'Multi-step form (with Ajax)',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('mci_ajax_multistepform'),
+        'access callback' => TRUE,
+        'file' => 'mci_ajax_forms.inc',
+    );
+    // The above example as it appears to users with no javascript.
+    $items['mci/ajax/multistepform_no_js'] = array(
+        'title' => 'Wizard w/JS turned off',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('mci_ajax_multistepform', TRUE),
+        'access callback' => TRUE,
+        'file' => 'mci_ajax_forms.inc',
+    );
+
+    return $items;
+}
